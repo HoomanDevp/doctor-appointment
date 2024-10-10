@@ -1,0 +1,30 @@
+version: '3.1'
+
+services:
+  db:
+    restart: always
+    image: postgres
+    container_name: appointment-db
+    environment:
+      - POSTGRES_USER=stts
+      - POSTGRES_PASSWORD=stts
+      - POSTGRES_DB=appointment_db
+    ports:
+      - "5433:5432"
+    volumes:
+      - appointment-data:/var/lib/postgresql/data/
+
+  appointment-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - db
+
+volumes:
+  appointment-data:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: ~/data/docker-volume/appointment-service/
